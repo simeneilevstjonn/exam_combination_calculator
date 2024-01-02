@@ -36,7 +36,7 @@
                             <input class="form-control" list="courseInputDatalist" id="courseInput" placeholder="Søk etter fag..." aria-describedby="courseInputButton">
                             <datalist id="courseInputDatalist">
                             </datalist>
-                            <button class="btn btn-outline-primary" type="button" id="courseInputButton">Legg til</button>
+                            <button class="btn btn-outline-primary" type="button" id="courseInputButton" onclick="addCourse(document.getElementById('courseInput').value);">Legg til</button>
                           </div>
 
                     </div>
@@ -44,46 +44,7 @@
                     <div>
                         <h6>Valgte emner</h6>
                         <div id="chosen-courses">
-                            <div class="card m-2 p-2">
-                                <h6 class="card-title">
-                                    Norsk sidemål (NOR1268)
-                                </h6>
-                                <div class="card-body p-0">
-                                    <!-- Info about exam date -->
-                                    <p>
-                                        Emnet har skriftlig eksamen 2024-05-21.
-                                    </p>
-
-                                    <!-- Overlap, if any -->
-                                    <div>
-                                        <p>
-                                            Overlapp:
-                                        </p>
-                                        <ul>
-                                            <li>
-                                                DAT230 Kommunikasjonsteknologi 1
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="card m-2 p-2">
-                                <div style="position: absolute; top: 0; right: 0;">
-                                    <button class="btn">
-                                        <i class="fa-solid fa-trash text-danger"></i>
-                                    </button>
-                                </div>
-                                <h6 class="card-title">
-                                    Kjemi 2 (REA3046)
-                                </h6>
-                                <div class="card-body p-0">
-                                    <!-- Info about exam date -->
-                                    <p>
-                                        Emnet har skriftlig eksamen 2024-05-29.
-                                    </p>
-                                </div>
-                            </div>
+                           
                         </div>
                     </div>
                 </div>
