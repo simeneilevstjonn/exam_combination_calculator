@@ -383,7 +383,12 @@ function runCalculator() {
         let dayBody = document.querySelector(`.calendar-body[data-calendar-date="${course.examDate}"]`);
 
         let el = document.createElement("div");
-        el.innerText = `${course.title} (${course.code}): ${Math.floor(relativeFrequencies[course.code] * 100)}%`
+        if (course.preparationDay !== undefined)
+            el.innerText = `Eksamen ${course.title} (${course.code}): ${Math.floor(relativeFrequencies[course.code] * 100)}%`
+        else
+            el.innerText = `${course.title} (${course.code}): ${Math.floor(relativeFrequencies[course.code] * 100)}%`
+        
+        
 
         dayBody.appendChild(el);
 
@@ -396,7 +401,7 @@ function runCalculator() {
             dayBody = document.querySelector(`.calendar-body[data-calendar-date="${course.preparationDay}"]`);
 
             el = document.createElement("div");
-            el.innerText = `${course.title} (${course.code}): ${Math.floor(relativeFrequencies[course.code] * 100)}%`
+            el.innerText = `Forberedelsesdag ${course.title} (${course.code}): ${Math.floor(relativeFrequencies[course.code] * 100)}%`
     
             dayBody.appendChild(el);
     
