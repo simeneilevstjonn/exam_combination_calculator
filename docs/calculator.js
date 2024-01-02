@@ -157,6 +157,7 @@ function renderCourses() {
 function addCourse(code) {
     if (!(code in courses)) return;
     if (activeCodes.indexOf(code) >= 0) return;
+    if (activeCodes.length > 3) return;
 
     activeCodes.push(code);
     activeCourses.push(courses[code])
@@ -164,6 +165,8 @@ function addCourse(code) {
     document.getElementById("courseInputDatalist").removeChild(
         document.querySelector(`option[value="${code}"]`)
     );
+
+    document.getElementById("courseInput").disabled = activeCodes.length > 3;
 
     renderCourses();
 }
@@ -189,6 +192,8 @@ function removeCourse(code) {
     el.innerText = course.title;
 
     document.getElementById("courseInputDatalist").appendChild(el);
+
+    document.getElementById("courseInput").disabled = activeCodes.length > 3;
 
     renderCourses();
 }
