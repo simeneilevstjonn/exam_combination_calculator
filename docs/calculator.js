@@ -216,8 +216,41 @@ function setSecondChoiceState(state) {
     renderCourses();
 }
 
-function runCalculator() {
+function renderCombinations(combinations) {
+    const list = document.getElementById("possibleWrittenCombinations");
+    console.log(combinations)
 
+    for (const comb of combinations) {
+        const ca = comb[0];
+        const cb = comb[1];
+        const el = document.createElement("li");
+        el.innerText = `${ca.title} (${ca.code}), ${cb.title} (${cb.code})`;
+        list.appendChild(el);
+    }
+}
+
+function runCalculator() {
+    // Find all possible combinations between two courses for a written exam
+    let courseCombinations = [];
+
+    let possibleCourses = activeCourses;
+    if (!noSecondChoiceForm) possibleCourses = [secondChoiceFormCourse].concat(activeCourses);
+
+    console.log(possibleCourses)
+
+    for (let i = 0; i < possibleCourses.length; i++) {
+        const ca = possibleCourses[i];
+        if (writtenExamTypes.indexOf(ca.examType) >= 0) {
+            for (let j = i + 1; j < possibleCourses.length; j++) {
+                const cb = possibleCourses[j];
+                if (writtenExamTypes.indexOf(cb.examType) >= 0 && findOverlaps(ca, cb).length == 0) {
+                    courseCombinations.push([ca, cb]);
+                }
+            }
+        }
+    }
+
+    renderCombinations(courseCombinations);
 }
 
 function goToCalculator() {
