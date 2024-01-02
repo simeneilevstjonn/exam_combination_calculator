@@ -40,11 +40,9 @@ for line in codesFile:
 
 
     course = {
-        "code": code,
+        "code": code.strip(),
         "title": title,
-        "hasWrittenExam": False,
-        "hasOralOralPracticalOrPracticalExam": False,
-        "oralOralPracticalOrPracticalExamType": None,
+        "examType": None,
         "fellesfag": j["fagtype"]["kode"] == "fagtype_fellesfag"
     }
 
@@ -55,29 +53,14 @@ for line in codesFile:
         extype = vo["type-eksamensordning"]["kode"]
 
         # Filter courses without "normal" exam forms
-        if extype == "eksamensordning_3":
-            course["hasOralOralPracticalOrPracticalExam"] = True
-            course["oralOralPracticalOrPracticalExamType"] = "muntlig-praktisk"
-        elif extype == "eksamensordning_4":
-            course["hasOralOralPracticalOrPracticalExam"] = True
-            course["oralOralPracticalOrPracticalExamType"] = "praktisk"
-        elif extype == "eksamensordning_5":
-            course["hasWrittenExam"] = True
-        elif extype == "eksamensordning_6":
-            course["hasWrittenExam"] = True
-            course["hasOralOralPracticalOrPracticalExam"] = True
-            course["oralOralPracticalOrPracticalExamType"] = "muntlig"
-        elif extype == "eksamensordning_7":
-            course["hasWrittenExam"] = True
-            course["hasOralOralPracticalOrPracticalExam"] = True
-            course["oralOralPracticalOrPracticalExamType"] = "muntlig-praktisk"
-        elif extype == "eksamensordning_13":
-            course["hasOralOralPracticalOrPracticalExam"] = True
-            course["oralOralPracticalOrPracticalExamType"] = "muntlig"
+        _, t = extype.split("_")
+        t = int(t)
+        if t in [3, 4, 5, 6, 7, 8, 13, 27]:
+            course["examType"] = t
 
         # We assume that no other exam type shows up for "normal" courses
 
-    if course["hasOralOralPracticalOrPracticalExam"] or course["hasWrittenExam"]:
+    if course["examType"] is not None:
         processedCodes[code] = course
 
 f = open("scrape/courses_with_exam_type.json", "w", encoding="utf-8")
