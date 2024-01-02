@@ -241,6 +241,7 @@ function setSecondChoiceState(state) {
 
 function renderCombinations(combinations) {
     const list = document.getElementById("possibleWrittenCombinations");
+    list.innerHTML = "";
 
     for (const comb of combinations) {
         const ca = comb[0];
@@ -300,6 +301,13 @@ function addExpectancyRow(title, value) {
     expectanciesTbody.appendChild(row);
 }
 
+function clearCalendar() {
+    for (const element of document.getElementsByClassName("calendar-body")) {
+        if (element.getAttribute("data-calendar-date") != "2024-05-22")
+            element.innerHTML = "";
+    }
+}
+
 function runCalculator() {
     // Find all possible combinations between two courses for a written exam
     let courseCombinations = [];
@@ -323,6 +331,9 @@ function runCalculator() {
 
     const possibleOralList = document.getElementById("possibleOral");
     const possibleWrittenList = document.getElementById("possibleWritten");
+
+    possibleOralList.innerHTML = "";
+    possibleWrittenList.innerHTML = "";
 
     const possibleOralCourses = [];
     const possibleWrittenCourses = [];
@@ -363,6 +374,7 @@ function runCalculator() {
 
 
     const relativeFrequencyTbody = document.getElementById("relativeFrequencyTbody");
+    relativeFrequencyTbody.innerHTML = "";
 
     for (const rf of relativeFrequenciesArray) {
         const row = document.createElement("tr");
@@ -378,6 +390,8 @@ function runCalculator() {
     }
     
     const probabilitiesPerDay = {};
+
+    clearCalendar();
 
     for (const course of possibleWrittenCourses) {
         let dayBody = document.querySelector(`.calendar-body[data-calendar-date="${course.examDate}"]`);
@@ -445,6 +459,7 @@ function runCalculator() {
 
 
     const relativeOralFrequencyTbody = document.getElementById("relativeOralFrequencyTbody");
+    relativeOralFrequencyTbody.innerHTML = "";
 
     for (const rf of oralFrequencyArray) {
         const row = document.createElement("tr");
@@ -460,6 +475,8 @@ function runCalculator() {
 
         relativeOralFrequencyTbody.appendChild(row);
     }
+
+    document.getElementById("expectanciesTbody").innerHTML = "";
 
     let expectedNorwegianExams = 1 + oralFrequencies["NOR1269"];
     if (!noSecondChoiceForm) 
