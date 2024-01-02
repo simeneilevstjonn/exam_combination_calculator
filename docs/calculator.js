@@ -177,4 +177,16 @@ function removeCourse(code) {
     renderCourses();
 }
 
+function addCourseFromInput() {
+    const inpt = document.getElementById("courseInput");
+
+    addCourse(inpt.value);
+    
+    inpt.value = "";
+}
+
+document.getElementById("courseInput").addEventListener("change", () => {
+    addCourseFromInput();
+});
+
 init();

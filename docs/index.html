@@ -32,11 +32,13 @@
                             <label class="form-check-label" for="noSecondChoiceFormSwitch">Sidemålsfritak</label>
                         </div>
 
-                        <div class="input-group mb-3">
-                            <input class="form-control" list="courseInputDatalist" id="courseInput" placeholder="Søk etter fag..." aria-describedby="courseInputButton">
+                        <div class="mb-3">
+                            <label for="courseInput">
+                                Søk etter fag
+                            </label>
+                            <input class="form-control" list="courseInputDatalist" id="courseInput" placeholder="Søk etter fag...">
                             <datalist id="courseInputDatalist">
                             </datalist>
-                            <button class="btn btn-outline-primary" type="button" id="courseInputButton" onclick="addCourse(document.getElementById('courseInput').value);">Legg til</button>
                           </div>
 
                     </div>
