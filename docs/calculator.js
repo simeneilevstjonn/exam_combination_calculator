@@ -488,9 +488,9 @@ function runCalculator() {
     let writtenProgramCourses = 0;
 
     for (const course of possibleWrittenCourses) {
-        if (course.fellesfag && course.code != "NOR1268")
+        if (course.fellesfag && course.code != "NOR1268" && course.code in relativeFrequencies)
             writtenCommonCourses += relativeFrequencies[course.code];
-        else if (!course.fellesfag)
+        else if (!course.fellesfag && course.code in relativeFrequencies)
             writtenProgramCourses += relativeFrequencies[course.code];
     }
 
@@ -501,10 +501,10 @@ function runCalculator() {
     let oralProgramCourses = 0;
 
     for (const course of possibleOralCourses) {
-        if (course.fellesfag)
-        oralCommonCourses += oralFrequencies[course.code];
-        else if (!course.fellesfag)
-        oralProgramCourses += oralFrequencies[course.code];
+        if (course.fellesfag && course.code in oralFrequencies)
+            oralCommonCourses += oralFrequencies[course.code];
+        else if (!course.fellesfag && course.code in oralFrequencies)
+            oralProgramCourses += oralFrequencies[course.code];
     }
 
     addExpectancyRow("Muntlige eksamener i fellesfag (inkludert norsk)", oralCommonCourses);
