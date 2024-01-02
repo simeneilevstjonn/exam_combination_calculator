@@ -47,6 +47,7 @@ const courseExamTypes = {
 
 const writtenExamTypes = [5, 6, 7, 8, 27];
 const oralOrOtherwiseExamTypes = [3, 4, 6, 7, 8, 13, 27];
+const excludesOralIfWrittenExamTypes = [6, 7];
 
 async function fetchCourses() {
     let courses;
@@ -240,7 +241,6 @@ function setSecondChoiceState(state) {
 
 function renderCombinations(combinations) {
     const list = document.getElementById("possibleWrittenCombinations");
-    console.log(combinations)
 
     for (const comb of combinations) {
         const ca = comb[0];
@@ -251,14 +251,46 @@ function renderCombinations(combinations) {
     }
 }
 
+function calculateOralFrequencies(possibleOralCourses, courseCombinations) {
+    const frequencies = {};
+
+    // Applies only in the standard case where 1 oral exam is chosen
+    for (const comb of courseCombinations) {
+        let count = 0;
+
+
+        for (const course of possibleOralCourses) {
+            count += !(excludesOralIfWrittenExamTypes.indexOf(course.examType) >= 0 && (comb[0] == course || comb[1] == course))
+        }
+
+
+        for (const course of possibleOralCourses) {
+            if (!(excludesOralIfWrittenExamTypes.indexOf(course.examType) >= 0 && (comb[0] == course || comb[1] == course))) {
+                if (course.code in frequencies)
+                    frequencies[course.code] += 1 / count / courseCombinations.length;
+                else 
+                    frequencies[course.code] = 1 / count / courseCombinations.length;
+            }
+        }
+    }
+
+    return frequencies;
+}
+
+function findCourseInArray(courses, code) {
+    for (const course of courses) {
+        if (course.code == code) return course;
+    }
+
+    return null;
+}
+
 function runCalculator() {
     // Find all possible combinations between two courses for a written exam
     let courseCombinations = [];
 
     let possibleCourses = activeCourses;
     if (!noSecondChoiceForm) possibleCourses = [secondChoiceFormCourse].concat(activeCourses);
-
-    console.log(possibleCourses)
 
     for (let i = 0; i < possibleCourses.length; i++) {
         const ca = possibleCourses[i];
@@ -377,6 +409,36 @@ function runCalculator() {
 
             dayBody.appendChild(el);
         }
+    }
+
+    const oralFrequencies = calculateOralFrequencies(possibleOralCourses, courseCombinations);
+
+    const oralFrequencyArray = [];
+
+    for (const code in oralFrequencies) {
+        if (!oralFrequencies.hasOwnProperty(code)) continue;
+
+        oralFrequencyArray.push([oralFrequencies[code], code]);
+    }
+
+    oralFrequencyArray.sort((a, b) => b[0] - a[0]);
+
+
+    const relativeOralFrequencyTbody = document.getElementById("relativeOralFrequencyTbody");
+
+    for (const rf of oralFrequencyArray) {
+        const row = document.createElement("tr");
+        const titleCell = document.createElement("td");
+        
+        const course = findCourseInArray(possibleOralCourses, rf[1]);
+        titleCell.textContent = `${course.title} (${course.code})`;
+        row.appendChild(titleCell);
+
+        const freqCell = document.createElement("td");
+        freqCell.textContent = Math.floor(rf[0] * 100) + "%";
+        row.appendChild(freqCell);
+
+        relativeOralFrequencyTbody.appendChild(row);
     }
 
 
