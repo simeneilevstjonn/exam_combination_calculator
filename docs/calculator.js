@@ -216,5 +216,21 @@ function setSecondChoiceState(state) {
     renderCourses();
 }
 
+function runCalculator() {
+
+}
+
+function goToCalculator() {
+    runCalculator();
+
+    document.getElementById("course-input-wrapper").style.display = "none";
+    document.getElementById("calculator-wrapper").style.display = "";
+}
+
+function goToInputPage() {
+    document.getElementById("course-input-wrapper").style.display = "";
+    document.getElementById("calculator-wrapper").style.display = "none";
+}
+
 init();
 renderCourses();
