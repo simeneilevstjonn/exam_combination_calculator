@@ -147,7 +147,7 @@ function renderCourses() {
         }
 
         dateInfo.innerText = di;
-        card.appendChild(dateInfo);
+        body.appendChild(dateInfo);
 
         // Find overlaps
         let overlaps = [];
@@ -169,7 +169,7 @@ function renderCourses() {
                 overlapsList.append(el);
             }
 
-            card.appendChild(overlapsList);
+            body.appendChild(overlapsList);
         }
 
         wrapper.appendChild(card);
