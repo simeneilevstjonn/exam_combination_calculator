@@ -295,6 +295,42 @@ function runCalculator() {
             possibleOralList.appendChild(el);
         }
     }
+
+    const relativeFrequencies = {};
+    const relativeFrequenciesArray = []
+
+    for (const course of possibleWrittenCourses) {
+        let count = 0;
+        for (const comb of courseCombinations) {
+            count += comb[0] == course || comb[1] == course;
+        }
+
+        let freq = count / courseCombinations.length;
+
+        relativeFrequencies[course.code] = freq;
+
+        relativeFrequenciesArray.push([freq, `${course.title} (${course.code})`]);
+    }
+
+    relativeFrequenciesArray.sort((a, b) => b[0] - a[0]);
+
+
+    const relativeFrequencyTbody = document.getElementById("relativeFrequencyTbody");
+
+    for (const rf of relativeFrequenciesArray) {
+        const row = document.createElement("tr");
+        const titleCell = document.createElement("td");
+        titleCell.textContent = rf[1];
+        row.appendChild(titleCell);
+
+        const freqCell = document.createElement("td");
+        freqCell.textContent = Math.floor(rf[0] * 100) + "%";
+        row.appendChild(freqCell);
+
+        relativeFrequencyTbody.appendChild(row);
+    }
+    
+
 }
 
 function goToCalculator() {
