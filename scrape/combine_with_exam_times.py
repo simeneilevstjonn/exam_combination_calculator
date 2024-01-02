@@ -19,6 +19,16 @@ with open("scrape/exam_times.csv") as f:
             j[code]["examDuration"] = dur
             j[code]["examDate"] = date
 
+markForDel = []
+
+for code, course in j.items():
+    # Remove courses with written exam without exam date
+    if course["examType"] in [5, 6, 7, 8, 27] and "examDate" not in course:
+        markForDel.append(code)
+
+for code in markForDel:
+    j.pop(code)
+
 with open("docs/data.json", "w", encoding="utf-8") as f:
     json.dump(j, f)
 
