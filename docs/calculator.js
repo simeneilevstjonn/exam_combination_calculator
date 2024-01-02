@@ -11,6 +11,27 @@ const secondChoiceFormCourse = {
     examDuration: 5
 };
 
+const commonOralCourses = [
+    {
+        title: "Norsk, vg3 studieforberedende utdanningsprogram, muntlig",
+        code: "NOR1269",
+        examType: 13,
+        fellesfag: true
+    },
+    {
+        title: "Historie Vg3 studieforberedende utdanningsprogram",
+        code: "HIS1010",
+        examType: 13,
+        fellesfag: true
+    },
+    {
+        title: "Religion og etikk",
+        code: "REL1003",
+        examType: 13,
+        fellesfag: true
+    }
+]
+
 let noSecondChoiceForm = false;
 
 const courseExamTypes = {
@@ -25,6 +46,7 @@ const courseExamTypes = {
 };
 
 const writtenExamTypes = [5, 6, 7, 8, 27];
+const oralOrOtherwiseExamTypes = [3, 4, 6, 7, 8, 13, 27];
 
 async function fetchCourses() {
     let courses;
@@ -251,6 +273,28 @@ function runCalculator() {
     }
 
     renderCombinations(courseCombinations);
+
+    const possibleOralList = document.getElementById("possibleOral");
+    const possibleWrittenList = document.getElementById("possibleWritten");
+
+    const possibleOralCourses = [];
+    const possibleWrittenCourses = [];
+
+    for (const course of possibleCourses.concat(commonOralCourses)) {
+        if (writtenExamTypes.indexOf(course.examType) >= 0) {
+            const el = document.createElement("li");
+            el.textContent = `${course.title} (${course.code})`;
+            possibleWrittenCourses.push(course);
+            possibleWrittenList.appendChild(el);
+        }
+
+        if (oralOrOtherwiseExamTypes.indexOf(course.examType) >= 0) {
+            const el = document.createElement("li");
+            el.textContent = `${course.title} (${course.code})`;
+            possibleOralCourses.push(course);
+            possibleOralList.appendChild(el);
+        }
+    }
 }
 
 function goToCalculator() {
