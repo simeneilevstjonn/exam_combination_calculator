@@ -285,6 +285,21 @@ function findCourseInArray(courses, code) {
     return null;
 }
 
+function addExpectancyRow(title, value) {
+    const expectanciesTbody = document.getElementById("expectanciesTbody");
+
+    const row = document.createElement("tr");
+    const titleCell = document.createElement("td");
+    titleCell.textContent = title;
+    row.appendChild(titleCell);
+
+    const expCell = document.createElement("td");
+    expCell.textContent = Math.round(value * 10) / 10;
+    row.appendChild(expCell);
+
+    expectanciesTbody.appendChild(row);
+}
+
 function runCalculator() {
     // Find all possible combinations between two courses for a written exam
     let courseCombinations = [];
@@ -441,7 +456,38 @@ function runCalculator() {
         relativeOralFrequencyTbody.appendChild(row);
     }
 
+    let expectedNorwegianExams = 1 + oralFrequencies["NOR1269"];
+    if (!noSecondChoiceForm) 
+        expectedNorwegianExams += relativeFrequencies["NOR1268"];
 
+    addExpectancyRow("Norskeksamener", expectedNorwegianExams);
+
+    let writtenCommonCourses = 0;
+    let writtenProgramCourses = 0;
+
+    for (const course of possibleWrittenCourses) {
+        if (course.fellesfag && course.code != "NOR1268")
+            writtenCommonCourses += relativeFrequencies[course.code];
+        else if (!course.fellesfag)
+            writtenProgramCourses += relativeFrequencies[course.code];
+    }
+
+    addExpectancyRow("Skriftlige eksamener i andre fellesfag", writtenCommonCourses);
+    addExpectancyRow("Skriftlige eksamener i programfag", writtenProgramCourses);
+
+    let oralCommonCourses = 0;
+    let oralProgramCourses = 0;
+
+    for (const course of possibleOralCourses) {
+        if (course.fellesfag)
+        oralCommonCourses += oralFrequencies[course.code];
+        else if (!course.fellesfag)
+        oralProgramCourses += oralFrequencies[course.code];
+    }
+
+    addExpectancyRow("Muntlige eksamener i fellesfag (inkludert norsk)", oralCommonCourses);
+    addExpectancyRow("Muntlige eksamener i programfag", oralProgramCourses);
+    
 }
 
 function goToCalculator() {
