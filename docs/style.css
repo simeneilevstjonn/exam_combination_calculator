@@ -1,0 +1,20 @@
+.calendar-day-number {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.calendar-day {
+    display: flex;
+}
+
+.calendar {
+    min-height: 256px;
+}
+
+.calendar-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
