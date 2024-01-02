@@ -330,6 +330,55 @@ function runCalculator() {
         relativeFrequencyTbody.appendChild(row);
     }
     
+    const probabilitiesPerDay = {};
+
+    for (const course of possibleWrittenCourses) {
+        let dayBody = document.querySelector(`.calendar-body[data-calendar-date="${course.examDate}"]`);
+
+        let el = document.createElement("div");
+        el.innerText = `${course.title} (${course.code}): ${Math.floor(relativeFrequencies[course.code] * 100)}%`
+
+        dayBody.appendChild(el);
+
+        if (!(course.examDate in probabilitiesPerDay)) 
+            probabilitiesPerDay[course.examDate] = [relativeFrequencies[course.code]];
+        else 
+            probabilitiesPerDay[course.examDate].push(relativeFrequencies[course.code])
+
+        if (course.preparationDay !== undefined) {
+            dayBody = document.querySelector(`.calendar-body[data-calendar-date="${course.preparationDay}"]`);
+
+            el = document.createElement("div");
+            el.innerText = `${course.title} (${course.code}): ${Math.floor(relativeFrequencies[course.code] * 100)}%`
+    
+            dayBody.appendChild(el);
+    
+            if (!(course.preparationDay in probabilitiesPerDay))
+                probabilitiesPerDay[course.preparationDay] = [relativeFrequencies[course.code]];
+            else
+                probabilitiesPerDay[course.preparationDay].push(relativeFrequencies[course.code]);
+
+        }
+    }
+
+    for (const date in probabilitiesPerDay) {
+        if (!probabilitiesPerDay.hasOwnProperty(date)) continue;
+
+        const arr = probabilitiesPerDay[date];
+        if (arr.length > 1) {
+            let sum = 0;
+            for (const el of arr) sum += el;
+
+            const dayBody = document.querySelector(`.calendar-body[data-calendar-date="${date}"]`);
+
+            const el = document.createElement("div");
+            el.className = "mt-1";
+            el.innerText = `Totalt: ${Math.floor(sum * 100)}%`
+
+            dayBody.appendChild(el);
+        }
+    }
+
 
 }
 
