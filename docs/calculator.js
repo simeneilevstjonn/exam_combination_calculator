@@ -2,6 +2,17 @@ let courses;
 let activeCourses = [];
 let activeCodes = [];
 
+const secondChoiceFormCourse = {
+    title: "Norsk sidemål, vg3 studieforberedende utdanningsprogram, skriftlig",
+    code: "NOR1268",
+    examType: 5,
+    examDate: "2024-05-21",
+    fellesfag: true,
+    examDuration: 5
+};
+
+let noSecondChoiceForm = false;
+
 const courseExamTypes = {
     3: "muntlig-praktisk",
     4: "praktisk",
@@ -77,16 +88,21 @@ function renderCourses() {
 
     wrapper.innerHTML = "";
 
-    for (const course of activeCourses) {
+    let coursesToRender = activeCourses;
+    if (!noSecondChoiceForm) coursesToRender = [secondChoiceFormCourse].concat(activeCourses);
+
+    for (const course of coursesToRender) {
         const card = document.createElement("div");
         card.className = "card m-2 p-2";
 
-        card.innerHTML = `
-        <div style="position: absolute; top: 0; right: 0;">
-            <button class="btn" onclick="removeCourse('${course.code}')">
-                <i class="fa-solid fa-trash text-danger"></i>
-            </button>
-        </div>`;
+        if (course.code != "NOR1268")
+            card.innerHTML = `
+            <div style="position: absolute; top: 0; right: 0;">
+                <button class="btn" onclick="removeCourse('${course.code}')">
+                    <i class="fa-solid fa-trash text-danger"></i>
+                </button>
+            </div>`;
+        
 
         const title = document.createElement("h6");
         title.classList.add("card-title");
@@ -189,4 +205,11 @@ document.getElementById("courseInput").addEventListener("change", () => {
     addCourseFromInput();
 });
 
+function setSecondChoiceState(state) {
+    noSecondChoiceForm = state;
+
+    renderCourses();
+}
+
 init();
+renderCourses();
