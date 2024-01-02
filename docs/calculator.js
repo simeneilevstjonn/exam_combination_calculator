@@ -241,7 +241,6 @@ function setSecondChoiceState(state) {
 
 function renderCombinations(combinations) {
     const list = document.getElementById("possibleWrittenCombinations");
-    list.innerHTML = "";
 
     for (const comb of combinations) {
         const ca = comb[0];
@@ -327,8 +326,6 @@ function runCalculator() {
         }
     }
 
-    renderCombinations(courseCombinations);
-
     const possibleOralList = document.getElementById("possibleOral");
     const possibleWrittenList = document.getElementById("possibleWritten");
 
@@ -354,16 +351,56 @@ function runCalculator() {
         }
     }
 
+    // Clear edge case notices
+    const edgeCaseNoticeNone = document.getElementById("edge-case-notice-none");
+    const edgeCaseNoticeOne = document.getElementById("edge-case-notice-one");
+
+    edgeCaseNoticeNone.style.display = "none";
+    edgeCaseNoticeOne.style.display = "none";
+
+    document.getElementById("possibleWrittenCombinations").innerHTML = "";
+
+    // Handle edge case where there are no combinations
+    if (courseCombinations.length == 0) {
+        // Check if there are any nonpaired written possibilities
+        if (possibleWrittenCourses.length > 0) {
+            // Need 2 oral exams and 1 written
+            const list = document.getElementById("possibleWrittenCombinations");
+            list.innerHTML = "";
+
+            for (const course of possibleWrittenCourses) {
+                const el = document.createElement("li");
+                el.innerText = `${course.title} (${course.code})`;
+                list.appendChild(el);
+            }
+
+            edgeCaseNoticeOne.style.display = "";
+        }
+        else {
+            // Need 3 oral exams
+            edgeCaseNoticeNone.style.display = "";
+
+        }
+    }
+    else {
+        renderCombinations(courseCombinations);
+    }
+
     const relativeFrequencies = {};
     const relativeFrequenciesArray = []
 
     for (const course of possibleWrittenCourses) {
         let count = 0;
-        for (const comb of courseCombinations) {
-            count += comb[0] == course || comb[1] == course;
+        let freq = 1 / possibleWrittenCourses.length;
+        
+        // Standard case
+        if (courseCombinations.length > 0) {
+            for (const comb of courseCombinations) {
+                count += comb[0] == course || comb[1] == course;
+            }
+    
+            freq = count / courseCombinations.length;
         }
-
-        let freq = count / courseCombinations.length;
 
         relativeFrequencies[course.code] = freq;
 
