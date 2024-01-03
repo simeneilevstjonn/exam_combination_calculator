@@ -48,6 +48,7 @@ const courseExamTypes = {
 const writtenExamTypes = [5, 6, 7, 8, 27];
 const oralOrOtherwiseExamTypes = [3, 4, 6, 7, 8, 13, 27];
 const excludesOralIfWrittenExamTypes = [6, 7];
+const allowsBothOralAndWrittenExamTypes = [8, 27];
 
 async function fetchCourses() {
     let courses;
@@ -292,8 +293,6 @@ function calculateOralFrequenciesForOneEdgeCase(possibleOralCourses, possibleWri
                 if ((excludesOralIfWrittenExamTypes.indexOf(cb.examType) >= 0 && wcourse == cb))
                     continue;
 
-                console.log("HERE!")
-
                 if (ca.code in frequencies)
                     frequencies[ca.code] += 1;
                 else 
@@ -387,6 +386,98 @@ function clearCalendar() {
     for (const element of document.getElementsByClassName("calendar-body")) {
         if (element.getAttribute("data-calendar-date") != "2024-05-22")
             element.innerHTML = "";
+    }
+}
+
+function calculateAndRenderTotalExpectanciesAndProbabilities(oralFrequencies, writtenFrequencies, courseCombinations, possibleOralCourses) {
+    const expectancies = {};
+
+    for (const code in oralFrequencies) {
+        if (!oralFrequencies.hasOwnProperty(code)) continue;
+
+        if (code in expectancies)
+            expectancies[code] += oralFrequencies[code];
+        else
+            expectancies[code] = oralFrequencies[code];
+    }
+
+    for (const code in writtenFrequencies) {
+        if (!writtenFrequencies.hasOwnProperty(code)) continue;
+
+        if (code in expectancies)
+            expectancies[code] += writtenFrequencies[code];
+        else
+            expectancies[code] = writtenFrequencies[code];
+    }
+
+    const rows = [];
+
+    for (const code in expectancies) {
+        if (!expectancies.hasOwnProperty(code)) continue;
+
+        let course;
+        
+        if (code in courses)
+            course = courses[code];
+        else if (code == "NOR1268")
+            course = secondChoiceFormCourse;
+        else 
+            course = findCourseInArray(commonOralCourses, code);
+
+        const name = `${course.title} (${course.code})`;
+        const expectancy = Math.floor(expectancies[code] * 100) / 100;
+
+        let probability = expectancies[code];
+
+        // P(A \cup B) = P(A) + P(B) - P(A \cap B) = P(A) + P(B) - P(B | A) * P(A)
+        // If course permits both oral and written, P(A \cap B) != 0, hence more simulation must be done
+
+        if (allowsBothOralAndWrittenExamTypes.indexOf(course.examType) >= 0) {
+            let simFreq;
+            // Base case
+            if (courseCombinations.length > 0) {
+                const allowedCombinations = courseCombinations.filter((comb) => comb[0] == course || comb[1] == course );
+
+                simFreq = calculateOralFrequencies(possibleOralCourses, allowedCombinations);
+
+            }
+            // Edge case One, Edge case None will never occur
+            else {
+                simFreq = calculateOralFrequenciesForOneEdgeCase(possibleOralCourses, [course]);
+            }
+
+            probability -= simFreq[code] * writtenFrequencies[code];
+
+        }
+
+        probability = Math.floor(probability * 100) + "%";
+
+        rows.push([name, expectancy, probability]);
+    }
+
+    rows.sort((a, b) => b[1] - a[1]);
+
+    const tbody = document.getElementById("totalExpectanciesTbody");
+    tbody.innerHTML = "";
+
+    for (const row of rows) {
+        const tr = document.createElement("tr");
+
+        const nameCell = document.createElement("td");
+        nameCell.textContent = row[0];
+        tr.appendChild(nameCell);
+
+        const probCell = document.createElement("td");
+        probCell.textContent = row[2];
+        tr.appendChild(probCell);
+
+        const expectCell = document.createElement("td");
+        expectCell.textContent = row[1];
+        tr.appendChild(expectCell);
+
+        
+
+        tbody.appendChild(tr);
     }
 }
 
@@ -635,7 +726,8 @@ function runCalculator() {
 
     addExpectancyRow("Muntlige eksamener i fellesfag (inkludert norsk)", oralCommonCourses);
     addExpectancyRow("Muntlige eksamener i programfag", oralProgramCourses);
-    
+
+    calculateAndRenderTotalExpectanciesAndProbabilities(oralFrequencies, relativeFrequencies, courseCombinations, possibleOralCourses);    
 }
 
 function goToCalculator() {
