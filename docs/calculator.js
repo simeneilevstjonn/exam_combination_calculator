@@ -666,6 +666,11 @@ class GradeEstimationCalculator {
         document.getElementById("gradeEstimateHistogram").style.display = "none";
         this.histogram = new google.visualization.Histogram(document.getElementById("gradeEstimateHistogram"));
 
+        this.renderGradeMeanInputs();
+
+        this.gradeMean = 0;
+        this.gradeCount = 0;
+
         this.renderResults();
     }
 
@@ -727,6 +732,50 @@ class GradeEstimationCalculator {
         return avgs;
     }
 
+    renderGradeMeanInputs() {
+        const parent = document.getElementById("gradeMeanInputsRow");
+
+        const colA = document.createElement("div");
+        colA.className = "col col-12 col-md-6";
+        parent.appendChild(colA);
+
+        const labelA = document.createElement("label");
+        labelA.setAttribute("for", "gradeMeanInput");
+        labelA.textContent = "Karaktergjennomsnitt"
+        colA.appendChild(labelA);
+
+        this.gradeMeanInput = document.createElement("input");
+        this.gradeMeanInput.type = "number";
+        this.gradeMeanInput.className = "form-control";
+        this.gradeMeanInput.id = "gradeMeanInput";
+        this.gradeMeanInput.min = 1;
+        this.gradeMeanInput.max = 6;
+        colA.appendChild(this.gradeMeanInput);
+
+        this.gradeMeanInput.addEventListener("change", this.onGradeMeanChangeHandler.bind(this));
+
+        const colB = document.createElement("div");
+        colB.className = "col col-12 col-md-6";
+        parent.appendChild(colB);
+
+        const labelB = document.createElement("label");
+        labelB.setAttribute("for", "gradeCountInput");
+        labelB.textContent = "Antall karakterer"
+        colB.appendChild(labelB);
+
+        this.gradeCountInput = document.createElement("input");
+        this.gradeCountInput.type = "number";
+        this.gradeCountInput.className = "form-control";
+        this.gradeCountInput.id = "gradeCountInput";
+        this.gradeCountInput.min = 10;
+        this.gradeCountInput.max = 60;
+        this.gradeCountInput.step = 1;
+        colB.appendChild(this.gradeCountInput);
+
+        this.gradeCountInput.addEventListener("change", this.onGradeCountChangeHandler.bind(this));
+
+    }
+
     renderHistogram() {
         const data = this.findAllGradeAveragesWithLabels();
         var dataTable = google.visualization.arrayToDataTable(
@@ -764,16 +813,50 @@ class GradeEstimationCalculator {
 
         let stdDev = 0;
 
+        let gradeMeanWith = 0;
+        let gradeMeanContrib = 0;
+
         if (sum != 0) {
             const avgs = this.findAllGradeAverages();
 
             stdDev = std(avgs);
 
             this.renderHistogram();
+
+            if (this.gradeCount > 0 && this.gradeMean > 0) {
+                gradeMeanWith = (this.gradeMean * this.gradeCount + sum / 4) / (this.gradeCount + 4);
+                gradeMeanContrib = gradeMeanWith - this.gradeMean;
+            }
         }
 
         this.addResultTableRow("Utvalgsstandardavvik karaktergjennomsnitt", Math.round(stdDev * 100) / 100);
+        this.addResultTableRow("Karaktergjennomsnitt med eksamenskarakterer", Math.round(gradeMeanWith * 100) / 100);
+        this.addResultTableRow("Karaktergjennomsnittbidrag fra eksamen", Math.round(gradeMeanContrib * 100) / 100);
 
+    }
+
+    onGradeMeanChangeHandler() {
+        const val = parseFloat(this.gradeMeanInput.value);
+
+        if (isNaN(val) || val < 1 || val > 6) {
+            this.gradeMeanInput.value = this.gradeMean != 0 ? this.gradeMean : "";
+        }
+        else {
+            this.gradeMean = val;
+            this.renderResults();
+        }
+    }
+
+    onGradeCountChangeHandler() {
+        const val = parseInt(this.gradeCountInput.value);
+
+        if (isNaN(val) || val < 10 || val > 60) {
+            this.gradeCountInput.value = this.gradeCount != 0 ? this.gradeCount : "";
+        }
+        else {
+            this.gradeCount = val;
+            this.renderResults();
+        }
     }
 
     updateEventHandler() {
