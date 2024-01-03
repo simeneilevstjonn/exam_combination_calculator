@@ -662,6 +662,8 @@ class GradeEstimationCalculator {
             this.courses.push(c);
         }
 
+        document.getElementById("gradeEstimateHistogram").innerHTML = "";
+        document.getElementById("gradeEstimateHistogram").style.display = "none";
         this.histogram = new google.visualization.Histogram(document.getElementById("gradeEstimateHistogram"));
 
         this.renderResults();
