@@ -18,3 +18,9 @@
     flex-direction: column;
     justify-content: center;
 }
+
+@media (min-width: 992px) {
+    .h-lg-50 {
+        height: 50%
+    }
+}
