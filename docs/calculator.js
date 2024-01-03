@@ -277,6 +277,47 @@ function calculateOralFrequencies(possibleOralCourses, courseCombinations) {
     return frequencies;
 }
 
+function calculateOralFrequenciesForOneEdgeCase(possibleOralCourses, possibleWrittenCourses) {
+    const frequencies = {};
+    let count = 0;
+
+    for (const wcourse of possibleWrittenCourses) {
+        for (let i = 0; i < possibleOralCourses.length; i++) {
+            const ca = possibleOralCourses[i];
+            if ((excludesOralIfWrittenExamTypes.indexOf(ca.examType) >= 0 && wcourse == ca))
+                continue;
+
+            for (let j = i + 1; j < possibleOralCourses.length; j++) {
+                const cb = possibleOralCourses[j];
+                if ((excludesOralIfWrittenExamTypes.indexOf(cb.examType) >= 0 && wcourse == cb))
+                    continue;
+
+                console.log("HERE!")
+
+                if (ca.code in frequencies)
+                    frequencies[ca.code] += 1;
+                else 
+                    frequencies[ca.code] = 1;
+
+                if (cb.code in frequencies)
+                    frequencies[cb.code] += 1;
+                else 
+                    frequencies[cb.code] = 1;
+
+                count += 1;
+            }
+        }
+    }
+
+    for (const code in frequencies) {
+        if (!frequencies.hasOwnProperty(code)) continue;
+
+        frequencies[code] /= count;
+    }
+
+    return frequencies;
+}
+
 function findCourseInArray(courses, code) {
     for (const course of courses) {
         if (course.code == code) return course;
@@ -359,6 +400,8 @@ function runCalculator() {
     edgeCaseNoticeOne.style.display = "none";
 
     document.getElementById("possibleWrittenCombinations").innerHTML = "";
+    
+    let oralFrequencies;
 
     // Handle edge case where there are no combinations
     if (courseCombinations.length == 0) {
@@ -375,6 +418,8 @@ function runCalculator() {
             }
 
             edgeCaseNoticeOne.style.display = "";
+
+            oralFrequencies = calculateOralFrequenciesForOneEdgeCase(possibleOralCourses, possibleWrittenCourses);
         }
         else {
             // Need 3 oral exams
@@ -384,6 +429,8 @@ function runCalculator() {
     }
     else {
         renderCombinations(courseCombinations);
+
+        oralFrequencies = calculateOralFrequencies(possibleOralCourses, courseCombinations);
     }
 
     const relativeFrequencies = {};
@@ -481,8 +528,6 @@ function runCalculator() {
             dayBody.appendChild(el);
         }
     }
-
-    const oralFrequencies = calculateOralFrequencies(possibleOralCourses, courseCombinations);
 
     const oralFrequencyArray = [];
 
