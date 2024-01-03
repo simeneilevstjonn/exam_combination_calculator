@@ -318,6 +318,48 @@ function calculateOralFrequenciesForOneEdgeCase(possibleOralCourses, possibleWri
     return frequencies;
 }
 
+function calculateOralFrequenciesForNoneEdgeCase(possibleOralCourses) {
+    const frequencies = {};
+    let count = 0;
+
+    for (let i = 0; i < possibleOralCourses.length; i++) {
+        const ca = possibleOralCourses[i];
+
+        for (let j = i + 1; j < possibleOralCourses.length; j++) {
+            const cb = possibleOralCourses[j];
+            
+            for (let k = j + 1; k < possibleOralCourses.length; k++) {
+                const cc = possibleOralCourses[k];
+
+                if (ca.code in frequencies)
+                frequencies[ca.code] += 1;
+                else 
+                    frequencies[ca.code] = 1;
+
+                if (cb.code in frequencies)
+                    frequencies[cb.code] += 1;
+                else 
+                    frequencies[cb.code] = 1;
+
+                if (cc.code in frequencies)
+                    frequencies[cc.code] += 1;
+                else 
+                    frequencies[cc.code] = 1;
+
+                count += 1;
+            }
+        }
+    }
+
+    for (const code in frequencies) {
+        if (!frequencies.hasOwnProperty(code)) continue;
+
+        frequencies[code] /= count;
+    }
+
+    return frequencies;
+}
+
 function findCourseInArray(courses, code) {
     for (const course of courses) {
         if (course.code == code) return course;
@@ -424,6 +466,8 @@ function runCalculator() {
         else {
             // Need 3 oral exams
             edgeCaseNoticeNone.style.display = "";
+
+            oralFrequencies = calculateOralFrequenciesForNoneEdgeCase(possibleOralCourses);
 
         }
     }
