@@ -378,6 +378,65 @@ function calculateOralFrequenciesForNoneEdgeCase(possibleOralCourses) {
     return frequencies;
 }
 
+function findOralAndWrittenCombinations(possibleOralCourses, courseCombinations) {
+    const combinations = [];
+
+    // Applies only in the standard case where 1 oral exam is chosen
+    for (const comb of courseCombinations) {
+        for (const course of possibleOralCourses) {
+            if (!(excludesOralIfWrittenExamTypes.indexOf(course.examType) >= 0 && (comb[0] == course || comb[1] == course))) {
+                combinations.push([[comb[0], false], [comb[1], false], [course, true]]);
+            }
+        }
+    }
+
+    return combinations;
+}
+
+function findOralAndWrittenCombinationsForOneEdgeCase(possibleOralCourses, possibleWrittenCourses) {
+    const combinations = [];
+
+
+    for (const wcourse of possibleWrittenCourses) {
+        for (let i = 0; i < possibleOralCourses.length; i++) {
+            const ca = possibleOralCourses[i];
+            if ((excludesOralIfWrittenExamTypes.indexOf(ca.examType) >= 0 && wcourse == ca))
+                continue;
+
+            for (let j = i + 1; j < possibleOralCourses.length; j++) {
+                const cb = possibleOralCourses[j];
+                if ((excludesOralIfWrittenExamTypes.indexOf(cb.examType) >= 0 && wcourse == cb))
+                    continue;
+
+                combinations.push([[wcourse, false], [ca, true], [cb, true]]);
+            }
+        }
+    }
+
+    return combinations;
+}
+
+function findOralAndWrittenCombinationsForNoneEdgeCase(possibleOralCourses) {
+    const combinations = [];
+
+    for (let i = 0; i < possibleOralCourses.length; i++) {
+        const ca = possibleOralCourses[i];
+
+        for (let j = i + 1; j < possibleOralCourses.length; j++) {
+            const cb = possibleOralCourses[j];
+            
+            for (let k = j + 1; k < possibleOralCourses.length; k++) {
+                const cc = possibleOralCourses[k];
+
+                combinations.push([[ca, true], [cb, true], [cc, true]]);
+            }
+        }
+    }
+
+    return combinations;
+
+}
+
 function findCourseInArray(courses, code) {
     for (const course of courses) {
         if (course.code == code) return course;
@@ -500,6 +559,26 @@ function calculateAndRenderTotalExpectanciesAndProbabilities(oralFrequencies, wr
     }
 }
 
+function std(vals) {
+    const n = vals.length;
+
+    let sum = 0;
+
+    for (const v of vals) {
+        sum += v;
+    }
+
+    const mean = sum / n;
+
+    let sqsum = 0;
+
+    for (const v of vals) {
+        sqsum += (v - mean)**2;
+    }
+
+    return (sqsum / (n - 1))**.5;
+}
+
 class GradeEstimationCourse {
     constructor(course, frequency, isOral, calculator) {
         this.course = course;
@@ -557,11 +636,13 @@ class GradeEstimationCourse {
 }
 
 class GradeEstimationCalculator {
-    constructor(oralFrequencies, writtenFrequencies, possibleWrittenCourses, possibleOralCourses) {
+    constructor(oralFrequencies, writtenFrequencies, possibleWrittenCourses, possibleOralCourses, oralAndWrittenCombinations) {
         this.courses = [];
 
         this.parent = document.getElementById("gradeEstimateTbody");
         this.parent.innerHTML = "";
+
+        this.oralAndWrittenCombinations = oralAndWrittenCombinations;
 
         this.resultTable = document.getElementById("gradeEstimateResultsTbody");
 
@@ -597,6 +678,31 @@ class GradeEstimationCalculator {
         this.resultTable.appendChild(row);
     }
 
+    findCourseByCodeAndIsOral(code, isOral) {
+        for (const course of this.courses) {
+            if (course.course.code == code && course.isOral == isOral) return course;
+        }
+        return null;
+    }
+
+    findAllGradeAverages() {
+        const avgs = [];
+
+        for (const comb of this.oralAndWrittenCombinations) {
+            const _courses = comb.map((x) => this.findCourseByCodeAndIsOral(x[0].code, x[1]));
+
+            let sum = this.findCourseByCodeAndIsOral("NOR1267", false).expectedGrade;
+            
+            for (const course of _courses) {
+                sum += course.expectedGrade;
+            }
+
+            avgs.push(sum / 4);
+        }
+
+        return avgs;
+    }
+
     renderResults() {
         this.resultTable.innerHTML = "";
 
@@ -614,6 +720,17 @@ class GradeEstimationCalculator {
 
         this.addResultTableRow("Forventet karaktersum", Math.round(sum * 100) / 100);
         this.addResultTableRow("Forventet karaktergjennomsnitt", Math.round(sum * 25) / 100);
+
+        let stdDev = 0;
+
+        if (sum != 0) {
+            const avgs = this.findAllGradeAverages();
+
+            stdDev = std(avgs);
+        }
+
+        this.addResultTableRow("Utvalgsstandardavvik karaktergjennomsnitt", Math.round(stdDev * 100) / 100);
+
     }
 
     updateEventHandler() {
@@ -695,6 +812,7 @@ function runCalculator() {
     document.getElementById("possibleWrittenCombinations").innerHTML = "";
     
     let oralFrequencies;
+    let oralAndWrittenCombinations;
 
     // Handle edge case where there are no combinations
     if (courseCombinations.length == 0) {
@@ -713,12 +831,14 @@ function runCalculator() {
             edgeCaseNoticeOne.style.display = "";
 
             oralFrequencies = calculateOralFrequenciesForOneEdgeCase(possibleOralCourses, possibleWrittenCourses);
+            oralAndWrittenCombinations = findOralAndWrittenCombinationsForOneEdgeCase(possibleOralCourses, possibleWrittenCourses);
         }
         else {
             // Need 3 oral exams
             edgeCaseNoticeNone.style.display = "";
 
             oralFrequencies = calculateOralFrequenciesForNoneEdgeCase(possibleOralCourses);
+            oralAndWrittenCombinations = findOralAndWrittenCombinationsForNoneEdgeCase(possibleOralCourses);
 
         }
     }
@@ -726,6 +846,7 @@ function runCalculator() {
         renderCombinations(courseCombinations);
 
         oralFrequencies = calculateOralFrequencies(possibleOralCourses, courseCombinations);
+        oralAndWrittenCombinations = findOralAndWrittenCombinations(possibleOralCourses, courseCombinations);
     }
 
     const relativeFrequencies = {};
@@ -892,7 +1013,7 @@ function runCalculator() {
 
     calculateAndRenderTotalExpectanciesAndProbabilities(oralFrequencies, relativeFrequencies, courseCombinations, possibleOralCourses);    
 
-    let gec = new GradeEstimationCalculator(oralFrequencies, relativeFrequencies, possibleWrittenCourses, possibleOralCourses);
+    let gec = new GradeEstimationCalculator(oralFrequencies, relativeFrequencies, possibleWrittenCourses, possibleOralCourses, oralAndWrittenCombinations);
 }
 
 function goToCalculator() {
