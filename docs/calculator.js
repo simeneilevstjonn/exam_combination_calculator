@@ -11,6 +11,15 @@ const secondChoiceFormCourse = {
     examDuration: 5
 };
 
+const firstChoiceFormCourse = {
+    title: "Norsk hovedmål, vg3 studieforberedende utdanningsprogram, skriftlig",
+    code: "NOR1267",
+    examType: 5,
+    examDate: "2024-05-22",
+    fellesfag: true,
+    examDuration: 5
+};
+
 const commonOralCourses = [
     {
         title: "Norsk, vg3 studieforberedende utdanningsprogram, muntlig",
@@ -44,6 +53,16 @@ const courseExamTypes = {
     13: "muntlig",
     27: "skriftlig og/eller muntlig-praktisk"
 };
+
+const courseOralExamTypes = {
+    3: "muntlig-praktisk",
+    4: "praktisk",
+    6: "muntlig",
+    7: "muntlig-praktisk",
+    8: "muntlig",
+    13: "muntlig",
+    27: "muntlig-praktisk"
+}
 
 const writtenExamTypes = [5, 6, 7, 8, 27];
 const oralOrOtherwiseExamTypes = [3, 4, 6, 7, 8, 13, 27];
@@ -481,6 +500,127 @@ function calculateAndRenderTotalExpectanciesAndProbabilities(oralFrequencies, wr
     }
 }
 
+class GradeEstimationCourse {
+    constructor(course, frequency, isOral, calculator) {
+        this.course = course;
+        this.frequency = frequency;
+        this.isOral = isOral;
+        this.calculator = calculator;
+
+        this.examType = isOral ? courseOralExamTypes[course.examType] : "skriftlig";
+
+        this.expectedGrade = 0;
+    }
+
+    render(parent) {
+        const row = document.createElement("tr");
+        
+        const titleCell = document.createElement("td");
+        titleCell.textContent = `${this.course.title} (${this.course.code}), ${this.examType}`;
+        row.appendChild(titleCell);
+
+        const inputCell = document.createElement("td");
+        this.input = document.createElement("input");
+        this.input.type = "number";
+        this.input.min = 1;
+        this.input.max = 6;
+        this.input.className = "form-control";
+        inputCell.appendChild(this.input);
+        row.appendChild(inputCell);
+
+        this.input.addEventListener("change", this.updateEventHandler.bind(this));
+
+        this.contributionCell = document.createElement("td");
+        this.contributionCell.innerText = 0;
+        row.appendChild(this.contributionCell);
+
+        parent.appendChild(row);    
+    }
+
+    contribution() {
+        return this.expectedGrade * this.frequency;
+    }
+
+    updateEventHandler() {
+        const val = parseFloat(this.input.value);
+
+        if (isNaN(val) || val < 1 || val > 6) return;
+
+        this.expectedGrade = val;
+
+        const contrib = Math.round(this.contribution() * 100) / 100;
+
+        this.contributionCell.innerText = contrib;
+
+        this.calculator.updateEventHandler();
+    }
+}
+
+class GradeEstimationCalculator {
+    constructor(oralFrequencies, writtenFrequencies, possibleWrittenCourses, possibleOralCourses) {
+        this.courses = [];
+
+        this.parent = document.getElementById("gradeEstimateTbody");
+        this.parent.innerHTML = "";
+
+        this.resultTable = document.getElementById("gradeEstimateResultsTbody");
+
+        const nor = new GradeEstimationCourse(firstChoiceFormCourse, 1, false, this);
+        nor.render(this.parent);
+        this.courses.push(nor);
+
+        for (const course of possibleWrittenCourses) {
+            const c = new GradeEstimationCourse(course, writtenFrequencies[course.code], false, this);
+            c.render(this.parent);
+            this.courses.push(c);
+        }
+
+        for (const course of possibleOralCourses) {
+            const c = new GradeEstimationCourse(course, oralFrequencies[course.code], true, this);
+            c.render(this.parent);
+            this.courses.push(c);
+        }
+
+        this.renderResults();
+    }
+
+    addResultTableRow(category, value) {
+        const row = document.createElement("tr");
+        const catCell = document.createElement("td");
+        catCell.textContent = category;
+        row.appendChild(catCell);
+
+        const valCell = document.createElement("td");
+        valCell.textContent = value;
+        row.appendChild(valCell);
+
+        this.resultTable.appendChild(row);
+    }
+
+    renderResults() {
+        this.resultTable.innerHTML = "";
+
+        let sum = 0;
+
+        for (const course of this.courses) {
+            sum += course.contribution();
+
+            // Do not display incomplete data if input has not completed
+            if (course.contribution() == 0) {
+                sum = 0;
+                break;
+            }
+        }
+
+        this.addResultTableRow("Forventet karaktersum", Math.round(sum * 100) / 100);
+        this.addResultTableRow("Forventet karaktergjennomsnitt", Math.round(sum * 25) / 100);
+    }
+
+    updateEventHandler() {
+        this.renderResults();
+    }
+}
+
 function runCalculator() {
     // Find all possible combinations between two courses for a written exam
     let courseCombinations = [];
@@ -751,6 +891,8 @@ function runCalculator() {
     addExpectancyRow("Muntlige eksamener i programfag", oralProgramCourses);
 
     calculateAndRenderTotalExpectanciesAndProbabilities(oralFrequencies, relativeFrequencies, courseCombinations, possibleOralCourses);    
+
+    let gec = new GradeEstimationCalculator(oralFrequencies, relativeFrequencies, possibleWrittenCourses, possibleOralCourses);
 }
 
 function goToCalculator() {

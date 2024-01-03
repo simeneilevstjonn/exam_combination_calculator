@@ -249,6 +249,50 @@ Norsk hovedmål, vg3 studieforberedende utdanningsprogram, skriftlig (NOR1267)
                 </div>
             </div>
 
+            <!-- Grade estimation -->
+            <div class="col col-12 p-2">
+                <div class="card p-2 h-100">
+                    <h5 class="card-title">Karakterestimering</h5>
+                    
+                    <div class="card-body p-1">
+                        <p class="text-secondary">
+                            Skriv inn forventede karakterer i hver eksamen for å lage en forventningsverdi på gjennomsnittlig eksamenskarakter.
+                            Desimaltall kan benyttes dersom forventet karakter er usikker.
+                        </p>
+                        <div class="row">
+                            <!-- Inputs -->
+                            <div class="col-12 col-lg-6">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Fag</th>
+                                            <th>Forventet karakter</th>
+                                            <th>Bidrag</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="gradeEstimateTbody">
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Results -->
+                            <div class="col-12 col-lg-6">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Kategori</th>
+                                            <th>Verdi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="gradeEstimateResultsTbody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="col col-12">
                 <button class="btn btn-primary" onclick="goToInputPage();">Tilbake</button>
             </div>
