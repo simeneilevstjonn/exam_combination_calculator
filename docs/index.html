@@ -15,298 +15,289 @@
 
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     </head>
-    <body data-bs-theme="dark">
-        <!-- Wrapper for the course input -->
-        <div class="container py-2" id="course-input-wrapper">
-            <div class="card p-2">
-                <h4 class="card-title">Velg fag</h4>
-                <div class="card-body">
-                    <p>
-                        Ordinære heltidselever i VG3 har fellesfagene norsk (NOR1267, NOR1268, og NOR1269), religion og etikk (REL1003) og historie (HIS1010), samt kroppsøving, men det har ikke eksamen, så det er ikke medregnet.
-                        Enkelte elever kan ha fritak fra sidemålseksamen (NOR1268).
-                        Alle elever skal ha fire eksamener, én er norsk hovedmål (NOR1267), i tillegg to skriftlige og én muntlig. Dersom eleven ikke har tilstrekkelig antall fag med skriftlig eksamen, vil det bli muntlige eksamener i stedet.
-                        Man velger normalt sett tre programfag, men det er i enkelte tilfeller mulighet til å velge både flere og færre.<br>
-                    </p>
-
-                    <div>
-                        <p>Velg 0 til 4 fag for å starte kalkulatoren.</p>
-                        
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" id="noSecondChoiceFormSwitch" onchange="setSecondChoiceState(this.checked);">
-                            <label class="form-check-label" for="noSecondChoiceFormSwitch">Sidemålsfritak</label>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="courseInput">
-                                Søk etter fag
-                            </label>
-                            <input class="form-control" list="courseInputDatalist" id="courseInput" placeholder="Søk etter fag...">
-                            <datalist id="courseInputDatalist">
-                            </datalist>
-                          </div>
-
-                    </div>
-
-                    <div>
-                        <h6>Valgte emner</h6>
-                        <div id="chosen-courses">
-                           
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer d-flex justify-content-end">
-                    <button class="btn btn-primary" onclick="goToCalculator();">Videre</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Wrapper for the calculator -->
-        <div class="m-2 row" id="calculator-wrapper" style="display: none;">
-            <!-- Possible exams wrapper -->
-            <div class="col col-12 col-lg-3 p-2">
-                <div class="card p-2 h-100">
-                    <h5 class="card-title">Mulige eksamener</h5>
-
-                    <div class="card-body p-1">
-                        <div class="text-secondary">Fagkoder som vises for muntlig eksamener er hovedfagkoden, som ikke nødvendigvis er den som benyttes til muntlig eksamen.</div>
-                        <h6>Muntlige</h6>
-                        <ul id="possibleOral">
-                        </ul>
-                        <h6>Skriftlige</h6>
-                        <ul id="possibleWritten">
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Calendar wrapper -->
-            <div class="col col-12 col-lg-9 p-2">
-                <div class="card px-3 py-1 h-100 calendar">
-                    <div class="row h-lg-50">
-                        <div class="col border calendar-day col-12 col-xl bg-body-tertiary">
-                            <div>20</div>
-                            <div class="calendar-body" data-calendar-date="2024-05-20">
-                            </div>
-                        </div>
-                        <div class="col border calendar-day col-12 col-xl">
-                            <div>21</div>
-                            <div class="calendar-body" data-calendar-date="2024-05-21">
-                            </div>
-                        </div>
-                        <div class="col border calendar-day col-12 col-xl">
-                            <div>22</div>
-                            <div class="calendar-body" data-calendar-date="2024-05-22">
-                                
-Norsk hovedmål, vg3 studieforberedende utdanningsprogram, skriftlig (NOR1267)
-                            </div>
-                        </div>
-                        <div class="col border calendar-day col-12 col-xl">
-                            <div>23</div>
-                            <div class="calendar-body" data-calendar-date="2024-05-23">
-                            </div>
-                        </div>
-                        <div class="col border calendar-day col-12 col-xl">
-                            <div>24</div>
-                            <div class="calendar-body" data-calendar-date="2024-05-24">
-                            </div>
-                        </div>
-                        <div class="col border calendar-day col-12 col-xl bg-body-tertiary">
-                            <div>25</div>
-                        </div>
-                        <div class="col border calendar-day col-12 col-xl bg-body-tertiary">
-                            <div>26</div>
-                        </div>
-                    </div>
-                    <div class="row h-lg-50">
-                        <div class="col border calendar-day col-12 col-xl">
-                            <div>27</div>
-                            <div class="calendar-body" data-calendar-date="2024-05-27">
-                            </div>
-                        </div>
-                        <div class="col border calendar-day col-12 col-xl">
-                            <div>28</div>
-                            <div class="calendar-body" data-calendar-date="2024-05-28">
-                            </div>
-                        </div>
-                        <div class="col border calendar-day col-12 col-xl">
-                            <div>29</div>
-                            <div class="calendar-body" data-calendar-date="2024-05-29">
-                            </div>
-                        </div>
-                        <div class="col border calendar-day col-12 col-xl">
-                            <div>30</div>
-                            <div class="calendar-body" data-calendar-date="2024-05-30">
-                            </div>
-                        </div>
-                        <div class="col border calendar-day col-12 col-xl">
-                            <div>31</div>
-                            <div class="calendar-body" data-calendar-date="2024-05-31">
-                            </div>
-                        </div>
-                        <div class="col border calendar-day col-12 col-xl bg-body-tertiary">
-                            <div>1</div>
-                        </div>
-                        <div class="col border calendar-day col-12 col-xl bg-body-tertiary">
-                            <div>2</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Possible combinations -->
-            <div class="col col-12 col-lg-6 p-2">
-                <div class="card p-2 h-100">
-                    <h5 class="card-title">Mulige kombinasjoner til skriftlig</h5>
-
-                    <p id="edge-case-notice-none" style="display: none;" class="text-info">Ingen skriftlige fag tilgjengelig. Det må gjennomføres 3 muntlig eksamener.</p>
-                    <p id="edge-case-notice-one" style="display: none;" class="text-info">Kun ett skriftlig fag, eller ingen ikke-overlappende kombinasjoner. Det må gjennomføres 2 muntlige eksamener.</p>
-                    <p id="edge-case-notice-prep" style="display: none;" class="text-info">Det eksisterer kun kombinasjoner med overlapp mellom eksamen og forberedelsesdag, det er likevel mulig at dette vil kunne gjennomføres for å få tilstrekkelig antall eksamener.</p>
-
-                    <div class="card-body p-1">
-                        <ul id="possibleWrittenCombinations">
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Relative frequency of each course -->
-            <div class="col col-12 col-lg-6 p-2">
-                <div class="card p-2 h-100">
-                    <h5 class="card-title">Relativfrekvenser</h5>
-                    <div class="card-body p-1">
-                        <div class="text-secondary">Under antagelsen om at alle kombinasjoner av fag til skriftlig eksamen er like frekvente.</div>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Fag</th>
-                                    <th>Frekvens</th>
-                                </tr>
-                            </thead>
-                            <tbody id="relativeFrequencyTbody">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Relative frequencies for oral exams -->
-            <div class="col col-12 col-lg-6 p-2">
-                <div class="card p-2 h-100">
-                    <h5 class="card-title">Relativfrekvenser for muntlig</h5>
-                    <div class="card-body p-1">
-                        <div class="text-secondary">Under antagelsen om at alle fag er like frekvente. I virkeligheten avhenger dette av skolens ressurser, blant annet antall fag hver enkelt lærer har.</div>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Fag</th>
-                                    <th>Frekvens</th>
-                                </tr>
-                            </thead>
-                            <tbody id="relativeOralFrequencyTbody">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Expectancies -->
-            <div class="col col-12 col-lg-6 p-2">
-                <div class="card p-2 h-100">
-                    <h5 class="card-title">Forventningsverdier</h5>
-                    <div class="card-body p-1">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Kategori</th>
-                                    <th>Forventningsverdi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="expectanciesTbody">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Total expectancies. col-12 col-lg-6 removed provisionally in order to avoid empty space -->
-            <div class="col p-2">
-                <div class="card p-2 h-100">
-                    <h5 class="card-title">Totale forventningsverdier og sannsynligheter</h5>
-                    <p class="text-secondary">
-                        Sannsynligheten for å få minst én eksamen, skriftlig eller muntlig, i hvert fag, samt forventet antall eksamener.
-                    </p>
-                    <div class="card-body p-1">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Fag</th>
-                                    <th>Sannsynlighet</th>
-                                    <th>Forventningsverdi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="totalExpectanciesTbody">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Grade estimation -->
-            <div class="col col-12 p-2">
-                <div class="card p-2 h-100">
-                    <h5 class="card-title">Karakterestimering</h5>
-                    
-                    <div class="card-body p-1">
-                        <p class="text-secondary">
-                            Skriv inn forventede karakterer i hver eksamen for å lage en forventningsverdi på gjennomsnittlig eksamenskarakter.
-                            Desimaltall kan benyttes dersom forventet karakter er usikker.
+    <body data-bs-theme="dark" class="d-flex flex-column justify-content-between">
+        <div>
+            <!-- Wrapper for the course input -->
+            <div class="container py-2" id="course-input-wrapper">
+                <div class="card p-2">
+                    <h4 class="card-title">Velg fag</h4>
+                    <div class="card-body">
+                        <p>
+                            Ordinære heltidselever i VG3 har fellesfagene norsk (NOR1267, NOR1268, og NOR1269), religion og etikk (REL1003) og historie (HIS1010), samt kroppsøving, men det har ikke eksamen, så det er ikke medregnet.
+                            Enkelte elever kan ha fritak fra sidemålseksamen (NOR1268).
+                            Alle elever skal ha fire eksamener, én er norsk hovedmål (NOR1267), i tillegg to skriftlige og én muntlig. Dersom eleven ikke har tilstrekkelig antall fag med skriftlig eksamen, vil det bli muntlige eksamener i stedet.
+                            Man velger normalt sett tre programfag, men det er i enkelte tilfeller mulighet til å velge både flere og færre.<br>
                         </p>
-                        <div class="row">
-                            <!-- Inputs -->
-                            <div class="col-12 col-lg-6">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Fag</th>
-                                            <th>Forventet karakter</th>
-                                            <th>Bidrag</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="gradeEstimateTbody">
-                                    </tbody>
-                                </table>
+                        <div>
+                            <p>Velg 0 til 4 fag for å starte kalkulatoren.</p>
+            
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="noSecondChoiceFormSwitch" onchange="setSecondChoiceState(this.checked);">
+                                <label class="form-check-label" for="noSecondChoiceFormSwitch">Sidemålsfritak</label>
                             </div>
-
-                            <!-- Results -->
-                            <div class="col-12 col-lg-6">
-                                <div id="gradeEstimateHistogram" class="w-100 mb-1" style="display: none;"></div>
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Kategori</th>
-                                            <th>Verdi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="gradeEstimateResultsTbody">
-                                    </tbody>
-                                </table>
-                                
-                                <p class="text-secondary">
-                                    Eksamenskarakterens bidrag til det totale karaktergjennomsnittet avhenger både av gjennomsnittet uten eksamenskarakterer, og antallet karakterer. Eventuelle realfags- eller språkpoeng skal ikke inkluderes.
-                                </p>
-                                <div class="row" id="gradeMeanInputsRow">
+                            <div class="mb-3">
+                                <label for="courseInput">
+                                    Søk etter fag
+                                </label>
+                                <input class="form-control" list="courseInputDatalist" id="courseInput" placeholder="Søk etter fag...">
+                                <datalist id="courseInputDatalist">
+                                </datalist>
+                              </div>
+                        </div>
+                        <div>
+                            <h6>Valgte emner</h6>
+                            <div id="chosen-courses">
+            
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-end">
+                        <button class="btn btn-primary" onclick="goToCalculator();">Videre</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Wrapper for the calculator -->
+            <div class="m-2 row" id="calculator-wrapper" style="display: none;">
+                <!-- Possible exams wrapper -->
+                <div class="col col-12 col-lg-3 p-2">
+                    <div class="card p-2 h-100">
+                        <h5 class="card-title">Mulige eksamener</h5>
+                        <div class="card-body p-1">
+                            <div class="text-secondary">Fagkoder som vises for muntlig eksamener er hovedfagkoden, som ikke nødvendigvis er den som benyttes til muntlig eksamen.</div>
+                            <h6>Muntlige</h6>
+                            <ul id="possibleOral">
+                            </ul>
+                            <h6>Skriftlige</h6>
+                            <ul id="possibleWritten">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Calendar wrapper -->
+                <div class="col col-12 col-lg-9 p-2">
+                    <div class="card px-3 py-1 h-100 calendar">
+                        <div class="row h-lg-50">
+                            <div class="col border calendar-day col-12 col-xl bg-body-tertiary">
+                                <div>20</div>
+                                <div class="calendar-body" data-calendar-date="2024-05-20">
+                                </div>
+                            </div>
+                            <div class="col border calendar-day col-12 col-xl">
+                                <div>21</div>
+                                <div class="calendar-body" data-calendar-date="2024-05-21">
+                                </div>
+                            </div>
+                            <div class="col border calendar-day col-12 col-xl">
+                                <div>22</div>
+                                <div class="calendar-body" data-calendar-date="2024-05-22">
                                     
+            Norsk hovedmål, vg3 studieforberedende utdanningsprogram, skriftlig (NOR1267)
+                                </div>
+                            </div>
+                            <div class="col border calendar-day col-12 col-xl">
+                                <div>23</div>
+                                <div class="calendar-body" data-calendar-date="2024-05-23">
+                                </div>
+                            </div>
+                            <div class="col border calendar-day col-12 col-xl">
+                                <div>24</div>
+                                <div class="calendar-body" data-calendar-date="2024-05-24">
+                                </div>
+                            </div>
+                            <div class="col border calendar-day col-12 col-xl bg-body-tertiary">
+                                <div>25</div>
+                            </div>
+                            <div class="col border calendar-day col-12 col-xl bg-body-tertiary">
+                                <div>26</div>
+                            </div>
+                        </div>
+                        <div class="row h-lg-50">
+                            <div class="col border calendar-day col-12 col-xl">
+                                <div>27</div>
+                                <div class="calendar-body" data-calendar-date="2024-05-27">
+                                </div>
+                            </div>
+                            <div class="col border calendar-day col-12 col-xl">
+                                <div>28</div>
+                                <div class="calendar-body" data-calendar-date="2024-05-28">
+                                </div>
+                            </div>
+                            <div class="col border calendar-day col-12 col-xl">
+                                <div>29</div>
+                                <div class="calendar-body" data-calendar-date="2024-05-29">
+                                </div>
+                            </div>
+                            <div class="col border calendar-day col-12 col-xl">
+                                <div>30</div>
+                                <div class="calendar-body" data-calendar-date="2024-05-30">
+                                </div>
+                            </div>
+                            <div class="col border calendar-day col-12 col-xl">
+                                <div>31</div>
+                                <div class="calendar-body" data-calendar-date="2024-05-31">
+                                </div>
+                            </div>
+                            <div class="col border calendar-day col-12 col-xl bg-body-tertiary">
+                                <div>1</div>
+                            </div>
+                            <div class="col border calendar-day col-12 col-xl bg-body-tertiary">
+                                <div>2</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Possible combinations -->
+                <div class="col col-12 col-lg-6 p-2">
+                    <div class="card p-2 h-100">
+                        <h5 class="card-title">Mulige kombinasjoner til skriftlig</h5>
+                        <p id="edge-case-notice-none" style="display: none;" class="text-info">Ingen skriftlige fag tilgjengelig. Det må gjennomføres 3 muntlig eksamener.</p>
+                        <p id="edge-case-notice-one" style="display: none;" class="text-info">Kun ett skriftlig fag, eller ingen ikke-overlappende kombinasjoner. Det må gjennomføres 2 muntlige eksamener.</p>
+                        <p id="edge-case-notice-prep" style="display: none;" class="text-info">Det eksisterer kun kombinasjoner med overlapp mellom eksamen og forberedelsesdag, det er likevel mulig at dette vil kunne gjennomføres for å få tilstrekkelig antall eksamener.</p>
+                        <div class="card-body p-1">
+                            <ul id="possibleWrittenCombinations">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Relative frequency of each course -->
+                <div class="col col-12 col-lg-6 p-2">
+                    <div class="card p-2 h-100">
+                        <h5 class="card-title">Relativfrekvenser</h5>
+                        <div class="card-body p-1">
+                            <div class="text-secondary">Under antagelsen om at alle kombinasjoner av fag til skriftlig eksamen er like frekvente.</div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Fag</th>
+                                        <th>Frekvens</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="relativeFrequencyTbody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- Relative frequencies for oral exams -->
+                <div class="col col-12 col-lg-6 p-2">
+                    <div class="card p-2 h-100">
+                        <h5 class="card-title">Relativfrekvenser for muntlig</h5>
+                        <div class="card-body p-1">
+                            <div class="text-secondary">Under antagelsen om at alle fag er like frekvente. I virkeligheten avhenger dette av skolens ressurser, blant annet antall fag hver enkelt lærer har.</div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Fag</th>
+                                        <th>Frekvens</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="relativeOralFrequencyTbody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- Expectancies -->
+                <div class="col col-12 col-lg-6 p-2">
+                    <div class="card p-2 h-100">
+                        <h5 class="card-title">Forventningsverdier</h5>
+                        <div class="card-body p-1">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Kategori</th>
+                                        <th>Forventningsverdi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="expectanciesTbody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- Total expectancies. col-12 col-lg-6 removed provisionally in order to avoid empty space -->
+                <div class="col p-2">
+                    <div class="card p-2 h-100">
+                        <h5 class="card-title">Totale forventningsverdier og sannsynligheter</h5>
+                        <p class="text-secondary">
+                            Sannsynligheten for å få minst én eksamen, skriftlig eller muntlig, i hvert fag, samt forventet antall eksamener.
+                        </p>
+                        <div class="card-body p-1">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Fag</th>
+                                        <th>Sannsynlighet</th>
+                                        <th>Forventningsverdi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="totalExpectanciesTbody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- Grade estimation -->
+                <div class="col col-12 p-2">
+                    <div class="card p-2 h-100">
+                        <h5 class="card-title">Karakterestimering</h5>
+            
+                        <div class="card-body p-1">
+                            <p class="text-secondary">
+                                Skriv inn forventede karakterer i hver eksamen for å lage en forventningsverdi på gjennomsnittlig eksamenskarakter.
+                                Desimaltall kan benyttes dersom forventet karakter er usikker.
+                            </p>
+                            <div class="row">
+                                <!-- Inputs -->
+                                <div class="col-12 col-lg-6">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Fag</th>
+                                                <th>Forventet karakter</th>
+                                                <th>Bidrag</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="gradeEstimateTbody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- Results -->
+                                <div class="col-12 col-lg-6">
+                                    <div id="gradeEstimateHistogram" class="w-100 mb-1" style="display: none;"></div>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Kategori</th>
+                                                <th>Verdi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="gradeEstimateResultsTbody">
+                                        </tbody>
+                                    </table>
+            
+                                    <p class="text-secondary">
+                                        Eksamenskarakterens bidrag til det totale karaktergjennomsnittet avhenger både av gjennomsnittet uten eksamenskarakterer, og antallet karakterer. Eventuelle realfags- eller språkpoeng skal ikke inkluderes.
+                                    </p>
+                                    <div class="row" id="gradeMeanInputsRow">
+            
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="col col-12">
-                <button class="btn btn-primary" onclick="goToInputPage();">Tilbake</button>
+                <div class="col col-12">
+                    <button class="btn btn-primary" onclick="goToInputPage();">Tilbake</button>
+                </div>
             </div>
         </div>
+
+        <footer class="bg-body-tertiary p-2 d-flex flex-column justify-content-center">
+            <div class="container p-2">
+                &copy; Simen Eilevstjønn 2023. Inneholder data under NLOD, tilgjengeliggjort på <a href="data.udir.no">data.udir.no</a>
+            </div>
+        </footer>
 
     <!-- Load script after loading DOM -->
     <script src="calculator.js"></script>

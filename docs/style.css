@@ -28,3 +28,15 @@
 #gradeEstimateHistogram {
     min-height: 384px;
 }
+
+footer {
+    min-height: 4em;
+}
+
+a {
+    color: inherit;
+}
+
+body {
+    min-height: 100vh;
+}
