@@ -528,9 +528,29 @@ function runCalculator() {
     // Clear edge case notices
     const edgeCaseNoticeNone = document.getElementById("edge-case-notice-none");
     const edgeCaseNoticeOne = document.getElementById("edge-case-notice-one");
+    const edgeCaseNoticePrep = document.getElementById("edge-case-notice-prep");
 
     edgeCaseNoticeNone.style.display = "none";
     edgeCaseNoticeOne.style.display = "none";
+    edgeCaseNoticePrep.style.display = "none";
+
+    // Edge case where there are multiple courses, but they overlap with preparation day.
+    if (possibleWrittenCourses.length > 1 && courseCombinations.length == 0) {
+        for (let i = 0; i < possibleCourses.length; i++) {
+            const ca = possibleCourses[i];
+            if (writtenExamTypes.indexOf(ca.examType) >= 0) {
+                for (let j = i + 1; j < possibleCourses.length; j++) {
+                    const cb = possibleCourses[j];
+                    if (writtenExamTypes.indexOf(cb.examType) >= 0 && ca.examDate != cb.examDate) {
+                        courseCombinations.push([ca, cb]);
+                    }
+                }
+            }
+        }
+
+        if (courseCombinations.length > 0) 
+            edgeCaseNoticePrep.style.display = "";
+    }
 
     document.getElementById("possibleWrittenCombinations").innerHTML = "";
     
@@ -653,6 +673,9 @@ function runCalculator() {
         if (arr.length > 1) {
             let sum = 0;
             for (const el of arr) sum += el;
+
+            // Presumably the sum only exceeds 1 in cases when two events are guaranteed to happen on the same day, making a Math.min safe
+            sum = Math.min(sum, 1);
 
             const dayBody = document.querySelector(`.calendar-body[data-calendar-date="${date}"]`);
 
