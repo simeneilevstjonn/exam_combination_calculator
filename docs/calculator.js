@@ -623,15 +623,18 @@ class GradeEstimationCourse {
     updateEventHandler() {
         const val = parseFloat(this.input.value);
 
-        if (isNaN(val) || val < 1 || val > 6) return;
+        if (isNaN(val) || val < 1 || val > 6) {
+            this.input.value = this.expectedGrade != 0 ? this.expectedGrade : "";
+        }
+        else {
+            this.expectedGrade = val;
 
-        this.expectedGrade = val;
+            const contrib = Math.round(this.contribution() * 100) / 100;
 
-        const contrib = Math.round(this.contribution() * 100) / 100;
+            this.contributionCell.innerText = contrib;
 
-        this.contributionCell.innerText = contrib;
-
-        this.calculator.updateEventHandler();
+            this.calculator.updateEventHandler();
+        }
     }
 }
 
