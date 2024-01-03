@@ -662,6 +662,8 @@ class GradeEstimationCalculator {
             this.courses.push(c);
         }
 
+        this.histogram = new google.visualization.Histogram(document.getElementById("gradeEstimateHistogram"));
+
         this.renderResults();
     }
 
@@ -703,6 +705,43 @@ class GradeEstimationCalculator {
         return avgs;
     }
 
+    findAllGradeAveragesWithLabels() {
+        const avgs = [];
+
+        for (const comb of this.oralAndWrittenCombinations) {
+            const _courses = comb.map((x) => this.findCourseByCodeAndIsOral(x[0].code, x[1]));
+
+            let sum = this.findCourseByCodeAndIsOral("NOR1267", false).expectedGrade;
+
+            const label = _courses.map((x) => `${x.course.code} (${x.examType})`).join(", ");
+            
+            for (const course of _courses) {
+                sum += course.expectedGrade;
+            }
+
+            avgs.push([label, sum / 4]);
+        }
+
+        return avgs;
+    }
+
+    renderHistogram() {
+        const data = this.findAllGradeAveragesWithLabels();
+        var dataTable = google.visualization.arrayToDataTable(
+            [["Kombinasjon", "Karaktergjennomsnitt"]].concat(data)
+        );
+
+        var options = {
+            title: "Karaktergjennomsnitt per 3-fag-kombinasjon",
+            legend: {
+                position: "none"
+            }
+        };
+
+        document.getElementById("gradeEstimateHistogram").style.display = "";
+        this.histogram.draw(dataTable, options);
+    }
+
     renderResults() {
         this.resultTable.innerHTML = "";
 
@@ -727,6 +766,8 @@ class GradeEstimationCalculator {
             const avgs = this.findAllGradeAverages();
 
             stdDev = std(avgs);
+
+            this.renderHistogram();
         }
 
         this.addResultTableRow("Utvalgsstandardavvik karaktergjennomsnitt", Math.round(stdDev * 100) / 100);
@@ -1030,3 +1071,4 @@ function goToInputPage() {
 
 init();
 renderCourses();
+google.charts.load("current", {packages:["corechart"]});

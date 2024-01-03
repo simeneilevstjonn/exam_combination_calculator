@@ -24,3 +24,7 @@
         height: 50%
     }
 }
+
+#gradeEstimateHistogram {
+    min-height: 384px;
+}
