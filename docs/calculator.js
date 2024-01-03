@@ -654,15 +654,20 @@ class GradeEstimationCalculator {
         this.courses.push(nor);
 
         for (const course of possibleWrittenCourses) {
-            const c = new GradeEstimationCourse(course, writtenFrequencies[course.code], false, this);
-            c.render(this.parent);
-            this.courses.push(c);
+            if (course.code in writtenFrequencies) {
+                const c = new GradeEstimationCourse(course, writtenFrequencies[course.code], false, this);
+                c.render(this.parent);
+                this.courses.push(c);
+            }
         }
 
         for (const course of possibleOralCourses) {
-            const c = new GradeEstimationCourse(course, oralFrequencies[course.code], true, this);
-            c.render(this.parent);
-            this.courses.push(c);
+            // Some courses might have an oral exam, though have no frequency if the written exam must always be taken
+            if (course.code in oralFrequencies) {
+                const c = new GradeEstimationCourse(course, oralFrequencies[course.code], true, this);
+                c.render(this.parent);
+                this.courses.push(c);
+            }
         }
 
         document.getElementById("gradeEstimateHistogram").innerHTML = "";
