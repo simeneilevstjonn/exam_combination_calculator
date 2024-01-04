@@ -832,7 +832,7 @@ class GradeEstimationCalculator {
             this.renderHistogram();
 
             if (this.gradeCount > 0 && this.gradeMean > 0) {
-                gradeMeanWith = (this.gradeMean * this.gradeCount + sum / 4) / (this.gradeCount + 4);
+                gradeMeanWith = (this.gradeMean * this.gradeCount + sum) / (this.gradeCount + 4);
                 gradeMeanContrib = gradeMeanWith - this.gradeMean;
             }
         }
